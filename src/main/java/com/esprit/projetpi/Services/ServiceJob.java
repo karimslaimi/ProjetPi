@@ -10,6 +10,7 @@ import java.util.List;
 public class ServiceJob implements IServiceJob {
 
     private JobRepository jobRepository;
+    private ServiceMessages serviceMessages;
 
     public ServiceJob(JobRepository jobRepository) {
         this.jobRepository = jobRepository;

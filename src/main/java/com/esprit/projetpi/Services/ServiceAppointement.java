@@ -4,6 +4,7 @@ import com.esprit.projetpi.Entities.Appointement;
 import com.esprit.projetpi.Repositories.AppointementRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,17 +12,21 @@ import java.util.List;
 @Service
 public class ServiceAppointement implements IServiceAppointement {
 
+    private ServiceMessages serviceMessages;
     private AppointementRepository appointementRepository;
 
-    public ServiceAppointement(AppointementRepository appropointementRepository){
+    public ServiceAppointement(AppointementRepository appropointementRepository,ServiceMessages serviceMessages){
         this.appointementRepository=appropointementRepository;
+        this.serviceMessages=serviceMessages;
     }
 
 
     @Override
     public Appointement create(Appointement appointement) {
         if(appointement!=null){
-            return appointementRepository.save(appointement);
+            appointement=appointementRepository.save(appointement);
+            this.serviceMessages.sendMail("You have an appointement","You have an appointement relative to the subject: "+appointement.getSubject(),appointement.getEmail());
+            return appointement;
         }
         return null;
     }
@@ -83,8 +88,8 @@ public class ServiceAppointement implements IServiceAppointement {
     @Override
     public List<Appointement> searchByDate(String date) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");//2022-03-07 15:22
-        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dateTime = LocalDate.parse(date, formatter);
 
         return appointementRepository.searchByDate(dateTime);
     }

@@ -2,6 +2,7 @@ package com.esprit.projetpi.Controllers;
 
 import com.esprit.projetpi.Entities.Reclamation;
 import com.esprit.projetpi.Services.IServiceReclamation;
+import com.esprit.projetpi.Services.ServiceMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -98,8 +100,8 @@ public class ReclamationController {
     @GetMapping("/between")
     public ResponseEntity<?> betweenDate(@RequestParam(name = "start") String start,@RequestParam(name = "end") String end){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDateTime s = LocalDateTime.parse(start, formatter);
-        LocalDateTime e = LocalDateTime.parse(end, formatter);
+        LocalDateTime s = LocalDate.parse(start, formatter).atStartOfDay();
+        LocalDateTime e = LocalDate.parse(end, formatter).atStartOfDay();
 
         return new ResponseEntity<>(reclamationService.findBetweenDate(s,e),HttpStatus.OK);
     }
@@ -145,8 +147,6 @@ public class ReclamationController {
 
 
     }
-
-
 
 
 

@@ -16,15 +16,21 @@ public class ServiceReclamation implements IServiceReclamation {
 
 
     private ReclamationRepository reclamationRepository;
+    private ServiceMessages serviceMessages;
 
-    public ServiceReclamation(ReclamationRepository reclamationRepo){
+    public ServiceReclamation(ReclamationRepository reclamationRepo,ServiceMessages serviceMessages){
         this.reclamationRepository=reclamationRepo;
+        this.serviceMessages=serviceMessages;
     }
 
     @Override
     public Boolean Create(Reclamation reclamation) {
 
         if (reclamation != null) {
+            if(serviceMessages.profanityDetection(reclamation.getTitle()+"."+reclamation.getExplication())|| !serviceMessages.sentimentAnalysis(reclamation.getTitle()+"."+reclamation.getExplication())){
+                return false;
+            }
+            reclamation.setTreatement(null);
             reclamation.setDateTime(LocalDateTime.now());
             reclamation.setState(false);
             reclamationRepository.save(reclamation);
@@ -47,6 +53,7 @@ public class ServiceReclamation implements IServiceReclamation {
             reclamation.setTreatement(treatement);
             reclamation.setState(true);
             reclamationRepository.save(reclamation);
+            serviceMessages.sendMail("Your claim number "+reclamation.getId()+" have been treated \n ", reclamation.getTreatement(),"saber.herbegue@esprit.tn");
 
             return true;
         } else {

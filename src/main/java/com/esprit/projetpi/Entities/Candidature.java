@@ -2,19 +2,18 @@ package com.esprit.projetpi.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 public class Candidature implements Serializable {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    private String phone;
+    private String email;
     private String name;
     private String lm;//lettre de motivation
     private String cv;//fichier à joindre plus tard
@@ -103,5 +102,22 @@ public class Candidature implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -1,6 +1,8 @@
 package com.esprit.projetpi.Entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,14 +11,14 @@ import java.time.LocalDateTime;
 @Entity
 public class Appointement implements Serializable {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private String name;
 
-    private String email;//the name of the person with whom to have an appointement
+    private String email;
 
-    private String subject;//type of appointement doctor/attorney etc...
+    private String subject;
 
     private LocalDateTime date;
 

@@ -60,10 +60,34 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.5.2</version>
 
-
         </dependency>
-    </dependencies>
 
+        <!-- send email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.vonage/client -->
+        <dependency>
+            <groupId>com.vonage</groupId>
+            <artifactId>client</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.Cloudmersive/Cloudmersive.APIClient.Java -->
+        <dependency>
+            <groupId>com.github.Cloudmersive</groupId>
+            <artifactId>Cloudmersive.APIClient.Java</artifactId>
+            <version>v4.25</version>
+        </dependency>
+
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>

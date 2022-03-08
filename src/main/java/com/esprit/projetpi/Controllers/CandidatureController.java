@@ -28,38 +28,8 @@ public class CandidatureController {
 
     @Operation(summary = "create application",description = "apply for a job offer by specifying the id of the job and the the application fields \n upload the cv and the lm (motivation letter)")
     @PostMapping("create/{id}")
-    public ResponseEntity<?> createCandidature(@RequestBody Candidature candidate, @PathVariable int id,@RequestParam("cv") MultipartFile cv,@RequestParam("lm") MultipartFile lm){
-        if(!cv.isEmpty()){
+    public ResponseEntity<?> createCandidature(@RequestBody Candidature candidate, @PathVariable int id){
 
-            try {
-
-                // Get the file and save it somewhere
-                byte[] bytes = cv.getBytes();
-                Path path = Paths.get(System.getProperty("java.io.tmpdir") + cv.getOriginalFilename()+ UUID.randomUUID());
-                Files.write(path, bytes);
-                candidate.setCv(path.toString());
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if(!lm.isEmpty()){
-
-            try {
-
-                // Get the file and save it somewhere
-                byte[] bytes = lm.getBytes();
-                Path path = Paths.get(System.getProperty("java.io.tmpdir") + lm.getOriginalFilename()+ UUID.randomUUID());
-                Files.write(path, bytes);
-                candidate.setLm(path.toString());
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        
         Candidature c=serviceCandidature.postC(candidate, id);
         if(c!=null){
             return new ResponseEntity<>(c, HttpStatus.CREATED);

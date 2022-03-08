@@ -14,10 +14,12 @@ public class ServiceCandidature implements IServiceCandidature {
 
     private CandidatureRepository candidatureRepository;
     private ServiceJob serviceJob;
+    private ServiceMessages serviceMessages;
 
-    public ServiceCandidature(CandidatureRepository candidatureRepository, ServiceJob serviceJob){
+    public ServiceCandidature(CandidatureRepository candidatureRepository, ServiceJob serviceJob,ServiceMessages serviceMessages){
         this.candidatureRepository=candidatureRepository;
         this.serviceJob=serviceJob;
+        this.serviceMessages=serviceMessages;
     }
 
 
@@ -27,9 +29,14 @@ public class ServiceCandidature implements IServiceCandidature {
         if(jobId==0){
            return null;
         }
+        if(serviceMessages.profanityDetection(candidature.getLm())|| !serviceMessages.sentimentAnalysis(candidature.getLm())){
+            return null;
+        }
         candidature.setDate(LocalDateTime.now());
         Job job=serviceJob.getOne(jobId);
         candidature.setJob(job);
+        candidature.setState("On Hold");
+        serviceMessages.sendMail("Application saved","Your application for the job : "+job.getTitle()+" have been saved it will be reviewed as soon as possible.",candidature.getEmail());
         return candidatureRepository.save(candidature);
 
     }
@@ -59,6 +66,8 @@ public class ServiceCandidature implements IServiceCandidature {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");//25-07-2021 15:22
             LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
             candidature.setEntretien(dateTime);
+            serviceMessages.sendMail("An interview has been fixed","An interview for the job "+candidature.getJob().getTitle()+" have been planned in this date : "+dateTime.toString()+".", candidature.getEmail());
+            serviceMessages.sendSMS(candidature.getPhone(), "An interview have been planned for you check your email inbox for more information");
             return candidatureRepository.save(candidature);
         }
     }
@@ -75,6 +84,8 @@ public class ServiceCandidature implements IServiceCandidature {
             return null;
         }else{
             candidature.setState(state);
+            serviceMessages.sendMail("Job offer application","your application for the job "+candidature.getJob().getTitle()+" have been "+candidature.getState() +".", candidature.getEmail());
+
             return candidatureRepository.save(candidature);
         }
     }

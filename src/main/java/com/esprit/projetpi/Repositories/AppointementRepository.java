@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface AppointementRepository extends JpaRepository<Appointement,Integ
     public List<Appointement> comingAppointement(@Param("date")LocalDateTime date);
 
     @Query("select a from Appointement a where a.date=:date")
-    public List<Appointement> searchByDate(@Param("date")LocalDateTime date);
+    public List<Appointement> searchByDate(@Param("date") LocalDate date);
 
     @Query("select a from Appointement a where a.email=:email")
     public List<Appointement> searchByEmail(@Param("email") String email);
